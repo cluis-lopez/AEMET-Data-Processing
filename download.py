@@ -80,6 +80,7 @@ def usage():
 
 def Main():
     apikey = preffix = estacion = fy = ly = ""
+    
     try:
         opts, args = getopt.getopt (sys.argv[1:], "f:l:p:s:k:")
     except getopt.GetoptError as err:
