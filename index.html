@@ -1,0 +1,332 @@
+<html>
+
+<head>
+    <title>Chart Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="header">
+        <p id="title1"></p>
+        <div id="range" class="selectrange">
+            Rango
+            <select id="yearRangeFirst">
+                <optgroup  id="firstYear" name="firstYear">
+                </optgroup>
+            </select>
+            <b>-</b>
+            <select id="yearRangeLast">
+                <optgroup id="lastYear" name="lastYear">
+                </optgroup>
+            </select>
+        </div>
+        <p id="title2"></p>
+    </div>
+
+    <div class="main">
+        <div class="mainc">
+            <h2>Resumen por a&ntilde;os</h2>
+            <div style="width: 75%; padding: 0; margin: auto; display: block;">
+                <canvas id="consolidated"></canvas>
+            </div>
+        </div>
+
+        <div class="mainc">
+            <h2 id="lastedyears"></h2>
+            <p id="lydetails"></p>
+            <div style="width: 75%; padding: 0; margin: auto; display: block;">
+                <canvas id="chartmonths"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="details" class="modal">
+        <div class="modal-content">
+            <div class="mainc">
+                <span class="close">&times;</span>
+                <h2 id="year"></h2>
+                <p id="ydetails"></p>
+                <div style="width: 75%; padding: 0; margin: auto; display: block;">
+                    <canvas id="detailYear"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./data.js"></script>
+    <script src="./metadata.js"></script>
+
+    <script>
+        //Global vars (oher than data and metadata)
+        const years = Object.keys(data);
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+            "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const tooltipData = {};
+        var dtchart;
+        var ycchart;
+        var yschart;
+        var firstYear = metadata["firstYear"];
+        var lastYear = metadata["lastYear"];
+
+        document.getElementById("title1").innerHTML = "Estaci&oacute;n: <b>" + metadata["indicativo"] + "</b>     , " + metadata["nombre"] + ", " + metadata["provincia"];
+        document.getElementById("title2").innerHTML = "Altitud " + metadata["altitud"] + "m."
+        document.getElementById("lastedyears").innerHTML = "Promedio años " + firstYear + "-" + lastYear;
+        var closeModal = document.getElementsByClassName("close")[0];
+        var modalWindow = document.getElementById("details");
+        var yearRangeFirst = document.getElementById("yearRangeFirst");
+        var yearRangeLast = document.getElementById("yearRangeLast");
+
+        for (y in years){
+            opt1 = document.createElement("option");
+            opt1.value = years[y]; opt1.innerHTML = years[y];
+            if (y == 0)
+                opt1.selected = true;
+            opt2 = document.createElement("option");
+            opt2.value = years[y]; opt2.innerHTML = years[y];
+            if (y == years.length - 1)
+                opt2.selected = true;
+            document.getElementById("firstYear").appendChild(opt1)
+            document.getElementById("lastYear").appendChild(opt2);
+        }
+
+        closeModal.onclick = function () {
+            modalWindow.style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target == modalWindow) {
+                modalWindow.style.display = "none";
+            }
+        }
+
+        yearRangeFirst.onchange = function(){
+            firstYear = yearRangeFirst.value;
+            document.getElementById("lastedyears").innerHTML = "Promedio años " + firstYear + "-" + lastYear;
+            yearCollection(firstYear, lastYear);
+            yearSummary(firstYear, lastYear);
+        }
+
+        yearRangeLast.onchange = function(){
+            lastYear = yearRangeLast.value;
+            document.getElementById("lastedyears").innerHTML = "Promedio años " + firstYear + "-" + lastYear;
+            yearCollection(firstYear, lastYear);
+            yearSummary(firstYeasr, lastYear);
+        }
+
+        yearCollection(firstYear, lastYear);
+        yearSummary(firstYear, lastYear);
+
+        function yearCollection(first, last) {
+            precTotal = []; tMed = []; absMax = []; absMin = []; dlluvia = [];
+            //Resumen por años
+            for (i = years.indexOf(first); i < years.indexOf(last)+1; i++ ) {
+                prec = 0;
+                tmed = 0;
+                aMax = -100;
+                aMin = 100;
+                dl = 0;
+                rd = 0;
+                rdd = "";
+                yeardata = data[years[i]];
+                months = Object.keys(yeardata);
+                numMonths = 0;
+                for (j in months) {
+                    numMonths += 1;
+                    prec = prec + yeardata[months[j]]["totalPrec"];
+                    dl = dl + yeardata[months[j]]["rainyDays"];
+                    tmed = tmed + yeardata[months[j]]["tMed"]
+                    if (yeardata[months[j]]["tMax"] > aMax)
+                        aMax = yeardata[months[j]]["tMax"];
+                    if (yeardata[months[j]]["tMin"] < aMin)
+                        aMin = yeardata[months[j]]["tMin"];
+                    if (yeardata[months[j]]["rainiestDay"]["prec"] > rd) {
+                        rd = yeardata[months[j]]["rainiestDay"]["prec"];
+                        rdd = yeardata[months[j]]["rainiestDay"]["day"];
+                    }
+                }
+                tMed.push(tmed / numMonths);
+                precTotal.push(prec);
+                dlluvia.push(dl + "\nDia mas lluvioso " + rdd + "  " + rd);
+                absMax.push(aMax);
+                absMin.push(aMin);
+            }
+
+            if (ycchart != undefined)
+                ycchart.destroy();
+
+            ycchart = drawChart('consolidated', years.slice(years.indexOf(first), years.indexOf(last)+1),
+                [['line', 'Temp Media', tMed], ['line', 'Max Absoluta', absMax],
+                ['line', 'Min Absoluta', absMin], ['bar', 'Precipitacion', precTotal],
+                ['hidden', 'yDLL', dlluvia]]);
+        }
+
+        function yearSummary(first, last) {
+            //Resumen por meses
+            mtMax = []; mtMaxMed = []; mtMin = []; mtMinMed = []
+            mtMed = []; mtotalPrec = []; mrainyDays = []
+            tprec = 0;
+            maxMed = -100; mmaxMed = "";
+            minMed = 100; mminMed = "";
+
+            for (m in meses) {
+                tp = tmaxm = tminm = tmed = rd = 0;
+                count = 0;
+                mes = parseInt(m)
+                for (i = years.indexOf(first); i < years.indexOf(last)+1; i++ ) {
+                    yeardata = data[years[i]];
+                    if (yeardata[mes + 1] != undefined) { //El mes existe
+                        tp = tp + yeardata[mes + 1]["totalPrec"];
+                        tmaxm = tmaxm + yeardata[mes + 1]["tMaxMed"];
+                        tminm = tminm + yeardata[mes + 1]["tMinMed"];
+                        tmed = tmed + yeardata[mes + 1]["tMed"];
+                        rd = rd + yeardata[mes + 1]["rainyDays"];
+                        count += 1;
+                    }
+                }
+                mtotalPrec.push(tp / count);
+                tprec = tprec + (tp / count);
+                mtMaxMed.push(tmaxm / count);
+                if ((tmaxm / count) > maxMed) {
+                    maxMed = (tmaxm / count);
+                    mmaxMed = m;
+                }
+                mtMinMed.push(tminm / count);
+                if ((tminm / count) < minMed) {
+                    minMed = (tminm / count);
+                    mminMed = m;
+                }
+                mtMed.push(tmed / count);
+                mrainyDays.push(Math.round(rd / count));
+            }
+
+            document.getElementById("lydetails").innerHTML = "Precipitación anual promedio en el periodo <b>"
+                + Number(tprec).toFixed(2) + "</b> mm" +
+                "<br>Mes mas caluroso <b>" + meses[mmaxMed] + "</b> con máxima promedio "
+                + Number(maxMed).toFixed(1) + " C" +
+                "<br>Mes más frío <b>" + meses[mminMed] + "</b> con mínima promedio "
+                + Number(minMed).toFixed(1) + " C";
+            
+                if (yschart != undefined)
+                yschart.destroy();
+
+            yschart = drawChart("chartmonths", meses,
+                [["line", "Temp. Media", mtMed], ["bar", "Precipitación", mtotalPrec],
+                ['line', "Máxima Media", mtMaxMed], ['line', 'Mínima Media', mtMinMed],
+                ['hidden', 'mDLL', mrainyDays]]);
+        }
+
+        function singleYear(year) {
+            tMax = []; tMin = []; tMaxMed = []; tMinMed = []; totalPrec = [];
+            tYearPrec = rainyDays = 0
+            yearData = data[parseInt(year)];
+
+            for (m in yearData) {
+                tMax.push(yearData[m]["tMax"]);
+                tMin.push(yearData[m]["tMin"]);
+                tMaxMed.push(yearData[m]["tMaxMed"]);
+                tMinMed.push(yearData[m]["tMinMed"]);
+                totalPrec.push(yearData[m]["totalPrec"]);
+                tYearPrec = tYearPrec + yearData[m]["totalPrec"]
+                rainyDays = rainyDays + yearData[m]["rainyDays"]
+            }
+
+            document.getElementById("ydetails").innerHTML = "Precipitación anual <b>"
+                + tYearPrec.toFixed(2) + "</b> mm" +
+                "<br>Dias con lluvia <b>" + rainyDays;
+            
+                if (dtchart != undefined)
+                dtchart.destroy();
+
+            dtchart = drawChart("detailYear", meses,
+                [['line', 'Temp Max', tMax], ['line', 'Temp. Min', tMin],
+                ['line', 'Max Media', tMaxMed], ['line', "Min Media", tMinMed],
+                ['bar', "Precipitacion", totalPrec]]);
+
+        }
+
+
+        function drawChart(canvasid, labels, charts) {
+            cx = document.getElementById(canvasid);
+            ds = [];
+            for (i in charts) {
+                if (charts[i][0] == 'line') {
+                    ds.push({
+                        type: "line",
+                        yAxisID: 'y1',
+                        label: charts[i][1],
+                        data: charts[i][2],
+                        borderWidth: 2
+                    })
+                }
+                if (charts[i][0] == 'bar') {
+                    ds.push({
+                        type: "bar",
+                        yAxisID: 'y2',
+                        label: charts[i][1],
+                        data: charts[i][2]
+                    })
+                }
+                if (charts[i][0] == 'hidden') {
+                    tooltipData[charts[i][1]] = charts[i][2];
+                }
+            }
+
+            ch = new Chart(cx, {
+                data: {
+                    labels: labels,
+                    datasets: ds
+                },
+                options: {
+                    maintainAspectRatio: true,
+                    scales: {
+                        y1: {
+                            position: 'left',
+                            stacked: false,
+                            title: { text: "Grados C", display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 50
+                        },
+                        y2: {
+                            position: 'right',
+                            stacked: false,
+                            title: { text: "mm", display: true },
+                            suggestedMin: 0
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                afterBody: function (x) {
+                                    s = x[0].label;
+                                    if (isNaN(s)) {
+                                        nd = meses.indexOf(x[0].label);
+                                        return ("\nDias con Lluvia " + tooltipData["mDLL"][nd]);
+                                    } else {
+                                        nd = parseInt(s) - parseInt(firstYear);
+                                        return ("\nDias con Lluvia " + tooltipData["yDLL"][nd]);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    onClick: function (e, activeEls) {
+                        let dataIndex = activeEls[0].index;
+                        let label = e.chart.data.labels[dataIndex];
+                        if (isNaN(label))
+                            return;
+                        else {
+                            document.getElementById("details").style.display = "block";
+                            document.getElementById("year").innerHTML = "Resumen del a&ntilde;o " + label;
+                            singleYear(label);
+                        }
+                    }
+                }
+            });
+            //console.log("Chart = " + ch);
+            return ch;
+        }
+    </script>
+</body>
+
+</html>
