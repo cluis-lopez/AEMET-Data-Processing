@@ -166,11 +166,14 @@
             mtMax = []; mtMaxMed = []; mtMin = []; mtMinMed = []
             mtMed = []; mtotalPrec = []; mrainyDays = []
             tprec = 0;
+            tabsMax = []; tabsMin = [];
             maxMed = -100; mmaxMed = "";
             minMed = 100; mminMed = "";
 
             for (m in meses) {
                 tp = tmaxm = tminm = tmed = rd = 0;
+                absMax = -100; iyMax = 0;
+                absMin = 100; iyMin = 0;
                 count = 0;
                 mes = parseInt(m)
                 for (i = years.indexOf(first); i < years.indexOf(last)+1; i++ ) {
@@ -181,12 +184,23 @@
                         tminm = tminm + yeardata[mes + 1]["tMinMed"];
                         tmed = tmed + yeardata[mes + 1]["tMed"];
                         rd = rd + yeardata[mes + 1]["rainyDays"];
+                        if (yeardata[mes+1]["tMax"] > absMax){
+                            absMax = yeardata[mes+1]["tMax"];
+                            iyMax = i;
+                        }
+                        if (yeardata[mes+1]["tMin"] < absMin){
+                            absMin = yeardata[mes+1]["tMin"];
+                            iyMin = i
+                        }
                         count += 1;
                     }
                 }
+
                 mtotalPrec.push(tp / count);
                 tprec = tprec + (tp / count);
                 mtMaxMed.push(tmaxm / count);
+                tabsMax.push(absMax); tabsMin.push(absMin);
+
                 if ((tmaxm / count) > maxMed) {
                     maxMed = (tmaxm / count);
                     mmaxMed = m;
@@ -197,7 +211,9 @@
                     mminMed = m;
                 }
                 mtMed.push(tmed / count);
-                mrainyDays.push(Math.round(rd / count));
+                mrainyDays.push(Math.round(rd / count) +
+                "\n Máxima absoluta " + years[iyMax]+
+                "\n Mínima absoluta " + years[iyMin]);
             }
 
             document.getElementById("lydetails").innerHTML = "Precipitación anual promedio en el periodo <b>"
@@ -213,12 +229,16 @@
             yschart = drawChart("chartmonths", meses,
                 [["line", "Temp. Media", mtMed], ["bar", "Precipitación", mtotalPrec],
                 ['line', "Máxima Media", mtMaxMed], ['line', 'Mínima Media', mtMinMed],
+                ['point', 'Máxima Absoluta', tabsMax], ['point', 'Mínima Absoluta', tabsMin],
                 ['hidden', 'mDLL', mrainyDays]]);
         }
 
         function singleYear(year) {
             tMax = []; tMin = []; tMaxMed = []; tMinMed = []; totalPrec = [];
+            tabsMax = {}; tabsMin = {}
             tYearPrec = rainyDays = 0
+                absMax = -100
+                absMin = 100
             yearData = data[parseInt(year)];
 
             for (m in yearData) {
@@ -265,6 +285,17 @@
                         yAxisID: 'y2',
                         label: charts[i][1],
                         data: charts[i][2]
+                    })
+                }
+                if (charts[i][0] == 'point') {
+                    ds.push({
+                        type: "line",
+                        yAxisID: 'y1',
+                        label: charts[i][1],
+                        data: charts[i][2],
+                        showLine: false,
+                        fill: false,
+                        pointRadius: 5
                     })
                 }
                 if (charts[i][0] == 'hidden') {
