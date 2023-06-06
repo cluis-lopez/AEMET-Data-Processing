@@ -16,9 +16,9 @@ AEMET proporciona, utilizando su plataforma opendata, datos históricos climatol
 
     `python download.py -f <año inicial> -l <año final> -p <prefijo ficheros> -s <indicador estacion AEMET> -k <API Key AEMET>`
 
-    Este comando nos generará una serie de ficheros nombrados <prefijo ficheros>_<año>.json con los datos diarios regocidos por la estación en cada año solicitado:
+    Este comando nos generará una serie de ficheros nombrados <prefijo_ficheros>_<año>.json con los datos diarios regocidos por la estación en cada año solicitado:
 
-       - **Advertencia**:
+       - Advertencias:
            -  Es posible que sobrepasemos el límite de datos que nos permite descargar AEMET en un coerto periodo. En ese caso tendremos que realizar varias descargas empleando un rango de años menor
            - Es posible que la estación solicitada no guarde datos históricos: no todas las estaciones de AEMET (o su servicio OpenData) permiten la descarga de históricos. En ese caso probar con estaciones cercanas.
            - Algunas estaciones (ej. Madrid Retiro) permiten la descarga de series de datos muy antiguas (ej. 1950 o anteiores) mientras que otras solo mantienen datos más recientes (ej. Llanes desde 1998). EN cualquier caso, se trata de probar
