@@ -112,9 +112,18 @@ def processYear(data):
         if (len(data) == index+1):
             print(currentMonth, end=" ")
             print("...Finish")
-            tMed = tMed / counttmed
-            tMaxMed = tMaxMed / counttmax
-            tMinMed = tMinMed / counttmin
+            if (counttmed > 0):
+                tMed = tMed / counttmed
+            else:
+                tMed = 0
+            if (counttmax >0):
+                tMaxMed = tMaxMed / counttmax
+            else:
+                tMaxMed = 0
+            if (counttmin>0):
+                tMinMed = tMinMed / counttmin
+            else:
+                tMinMed = 0
 
             rainiestDay["day"] = str(rainiestDay["day"])
             monthData = {"DataDays": daysInMonth, "tMax": round(tMax,2), "tMaxMed": round(tMaxMed,2), "tMin": round(tMin,2), "tMinMed": round(tMinMed,2), "tMed": round(tMed,2), "totalPrec": round(totalPrec,2), "rainyDays": rainyDays, "rainiestDay": rainiestDay}
