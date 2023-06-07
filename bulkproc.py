@@ -34,7 +34,7 @@ def processYear(data):
 
     for index, idx in enumerate(data):
         d = date.fromisoformat(idx["fecha"])
-        if (d.month > currentMonth):
+        if (d.month > currentMonth or len(data) == index+1):
             print(currentMonth, end=".")
             if (counttmed > 0):
                 tMed = tMed / counttmed
@@ -108,26 +108,6 @@ def processYear(data):
                     rainiestDay["prec"] = t
         else:
             errors += 1
-
-        if (len(data) == index+1):
-            print(currentMonth, end=" ")
-            print("...Finish")
-            if (counttmed > 0):
-                tMed = tMed / counttmed
-            else:
-                tMed = 0
-            if (counttmax >0):
-                tMaxMed = tMaxMed / counttmax
-            else:
-                tMaxMed = 0
-            if (counttmin>0):
-                tMinMed = tMinMed / counttmin
-            else:
-                tMinMed = 0
-
-            rainiestDay["day"] = str(rainiestDay["day"])
-            monthData = {"DataDays": daysInMonth, "tMax": round(tMax,2), "tMaxMed": round(tMaxMed,2), "tMin": round(tMin,2), "tMinMed": round(tMinMed,2), "tMed": round(tMed,2), "totalPrec": round(totalPrec,2), "rainyDays": rainyDays, "rainiestDay": rainiestDay}
-            yearData[currentMonth] = monthData
 
     print ("Finalizado {0} . Procesados {1} dias con {2} errores".format(currentYear, daysWithData, errors))
     return reviewData(currentYear, yearData)
