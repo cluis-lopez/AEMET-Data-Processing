@@ -63,7 +63,7 @@
         const years = Object.keys(data);
         const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
             "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        const tooltipData = {};
+        const tooltipData = {"Principal": {}, "porMeses": {}, "Año": {}};
         var dtchart;
         var ycchart;
         var yschart;
@@ -147,7 +147,9 @@
                 }
                 tMed.push(tmed / numMonths);
                 precTotal.push(prec);
-                dlluvia.push(dl + "\nDia mas lluvioso " + rdd + "  " + rd);
+                fecha = [meses[parseInt(rdd.split("-")[1])], rdd.split("-")[2]];
+                dlluvia.push("\nDias con lluvia: " + dl + "\nDia mas lluvioso " + fecha[1] + " "
+                     + fecha[0] + "  " + rd + " mm");
                 absMax.push(aMax);
                 absMin.push(aMin);
             }
@@ -155,16 +157,17 @@
             if (ycchart != undefined)
                 ycchart.destroy();
 
-            ycchart = drawChart('consolidated', years.slice(years.indexOf(first), years.indexOf(last)+1),
+            tooltipData["Principal"] = {"Precipitacion": dlluvia};
+            ycchart = drawChart('consolidated', "Principal",
+                years.slice(years.indexOf(first), years.indexOf(last)+1),
                 [['line', 'Temp Media', tMed], ['line', 'Max Absoluta', absMax],
-                ['line', 'Min Absoluta', absMin], ['bar', 'Precipitacion', precTotal],
-                ['hidden', 'yDLL', dlluvia]]);
+                ['line', 'Min Absoluta', absMin], ['bar', 'Precipitacion', precTotal]]);
         }
 
         function yearSummary(first, last) {
             //Resumen por meses
             mtMax = []; mtMaxMed = []; mtMin = []; mtMinMed = []
-            mtMed = []; mtotalPrec = []; mrainyDays = []
+            mtMed = []; mtotalPrec = []; mrainyDays = []; myMaxAbs = []; myMinAbs = [];
             tprec = 0;
             tabsMax = []; tabsMin = [];
             maxMed = -100; mmaxMed = "";
@@ -211,10 +214,13 @@
                     mminMed = m;
                 }
                 mtMed.push(tmed / count);
-                mrainyDays.push(Math.round(rd / count) +
-                "\n Máxima absoluta " + years[iyMax]+
-                "\n Mínima absoluta " + years[iyMin]);
+                mrainyDays.push("\nPromedio días lluviosos " + Math.round(rd / count));
+                myMaxAbs.push("\nAño Máxima: " +years[iyMax]); 
+                myMinAbs.push("\nAño Mínima: " + years[iyMin]);
             }
+
+            tooltipData["porMeses"] = {"Precipitación": mrainyDays, "Máxima Absoluta": myMaxAbs,
+                "Mínima Absoluta": myMinAbs};
 
             document.getElementById("lydetails").innerHTML = "Precipitación anual promedio en el periodo <b>"
                 + Number(tprec).toFixed(2) + "</b> mm" +
@@ -226,15 +232,14 @@
                 if (yschart != undefined)
                 yschart.destroy();
 
-            yschart = drawChart("chartmonths", meses,
+            yschart = drawChart("chartmonths", "porMeses", meses,
                 [["line", "Temp. Media", mtMed], ["bar", "Precipitación", mtotalPrec],
                 ['line', "Máxima Media", mtMaxMed], ['line', 'Mínima Media', mtMinMed],
-                ['point', 'Máxima Absoluta', tabsMax], ['point', 'Mínima Absoluta', tabsMin],
-                ['hidden', 'mDLL', mrainyDays]]);
+                ['point', 'Máxima Absoluta', tabsMax], ['point', 'Mínima Absoluta', tabsMin]]);
         }
 
         function singleYear(year) {
-            tMax = []; tMin = []; tMaxMed = []; tMinMed = []; totalPrec = [];
+            tMax = []; tMin = []; tMaxMed = []; tMinMed = []; totalPrec = []; mrDays = []
             tabsMax = {}; tabsMin = {}
             tYearPrec = rainyDays = 0
                 absMax = -100
@@ -247,26 +252,29 @@
                 tMaxMed.push(yearData[m]["tMaxMed"]);
                 tMinMed.push(yearData[m]["tMinMed"]);
                 totalPrec.push(yearData[m]["totalPrec"]);
-                tYearPrec = tYearPrec + yearData[m]["totalPrec"]
-                rainyDays = rainyDays + yearData[m]["rainyDays"]
+                tYearPrec = tYearPrec + yearData[m]["totalPrec"];
+                rainyDays = rainyDays + yearData[m]["rainyDays"];
+                mrDays.push("\nDías con lluvia :" + yearData[m]["rainyDays"]);
             }
 
-            document.getElementById("ydetails").innerHTML = "Precipitación anual <b>"
+            tooltipData["Año"] = {"Precipitación": mrDays};
+
+            document.getElementById("ydetails").innerHTML = "Precipitación anual total <b>"
                 + tYearPrec.toFixed(2) + "</b> mm" +
                 "<br>Dias con lluvia <b>" + rainyDays;
             
                 if (dtchart != undefined)
                 dtchart.destroy();
 
-            dtchart = drawChart("detailYear", meses,
+            dtchart = drawChart("detailYear", "Año", meses,
                 [['line', 'Temp Max', tMax], ['line', 'Temp. Min', tMin],
                 ['line', 'Max Media', tMaxMed], ['line', "Min Media", tMinMed],
-                ['bar', "Precipitacion", totalPrec]]);
+                ['bar', "Precipitación", totalPrec]]);
 
         }
 
 
-        function drawChart(canvasid, labels, charts) {
+        function drawChart(canvasid, title, labels, charts) {
             cx = document.getElementById(canvasid);
             ds = [];
             for (i in charts) {
@@ -277,16 +285,16 @@
                         label: charts[i][1],
                         data: charts[i][2],
                         borderWidth: 2
-                    })
-                }
+                    });
+                };
                 if (charts[i][0] == 'bar') {
                     ds.push({
                         type: "bar",
                         yAxisID: 'y2',
                         label: charts[i][1],
                         data: charts[i][2]
-                    })
-                }
+                    });
+                };
                 if (charts[i][0] == 'point') {
                     ds.push({
                         type: "line",
@@ -296,11 +304,8 @@
                         showLine: false,
                         fill: false,
                         pointRadius: 5
-                    })
-                }
-                if (charts[i][0] == 'hidden') {
-                    tooltipData[charts[i][1]] = charts[i][2];
-                }
+                    });
+                };
             }
 
             ch = new Chart(cx, {
@@ -326,17 +331,22 @@
                         }
                     },
                     plugins: {
+                        title: {
+                            display: false,
+                            text: title
+                        },
                         tooltip: {
                             callbacks: {
                                 afterBody: function (x) {
-                                    s = x[0].label;
-                                    if (isNaN(s)) {
-                                        nd = meses.indexOf(x[0].label);
-                                        return ("\nDias con Lluvia " + tooltipData["mDLL"][nd]);
-                                    } else {
-                                        nd = parseInt(s) - parseInt(firstYear);
-                                        return ("\nDias con Lluvia " + tooltipData["yDLL"][nd]);
-                                    }
+                                    lab = x[0].label;
+                                    chtitle = x[0].chart.titleBlock.options.text;
+                                    chdata = x[0].dataset.label;
+                                    (isNaN(lab)? idx = meses.indexOf(lab): idx = parseInt(lab)-parseInt(firstYear))
+                                    if (tooltipData[chtitle][chdata] != undefined){
+                                        text = tooltipData[chtitle][chdata][idx];
+                                        return text;
+                                    } else
+                                        return;
                                 }
                             }
                         }
