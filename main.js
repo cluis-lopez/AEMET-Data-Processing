@@ -50,7 +50,7 @@ yearRangeLast.onchange = function () {
     lastYear = yearRangeLast.value;
     document.getElementById("lastedyears").innerHTML = "Promedio años " + firstYear + "-" + lastYear;
     yearCollection(firstYear, lastYear);
-    yearSummary(firstYeasr, lastYear);
+    yearSummary(firstYear, lastYear);
 }
 
 yearCollection(firstYear, lastYear);
