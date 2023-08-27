@@ -107,7 +107,7 @@ function yearSummary(first, last) {
     //Resumen por meses
     mtMax = []; mtMaxMed = []; mtMin = []; mtMinMed = []
     mtMed = []; mtotalPrec = []; mrainyDays = []; myMaxAbs = []; myMinAbs = [];
-    tprec = 0;
+    tprec = 0; trainydays = 0;
     tabsMax = []; tabsMin = [];
     maxMed = -100; mmaxMed = "";
     minMed = 100; mminMed = "";
@@ -154,6 +154,7 @@ function yearSummary(first, last) {
         }
         mtMed.push(tmed / count);
         mrainyDays.push("\nPromedio días lluviosos " + Math.round(rd / count));
+        trainydays += Math.round(rd / count);
         myMaxAbs.push("\nAño Máxima: " + years[iyMax]);
         myMinAbs.push("\nAño Mínima: " + years[iyMin]);
     }
@@ -165,6 +166,7 @@ function yearSummary(first, last) {
 
     document.getElementById("lydetails").innerHTML = "Precipitación anual promedio en el periodo <b>"
         + Number(tprec).toFixed(2) + "</b> mm" +
+        "<br>Promedio de d&iacute;as lluviosos anuales en el periodo: <b>" + trainydays + "</b>" +
         "<br>Mes mas caluroso <b>" + meses[mmaxMed] + "</b> con máxima promedio "
         + Number(maxMed).toFixed(1) + " C" +
         "<br>Mes más frío <b>" + meses[mminMed] + "</b> con mínima promedio "
