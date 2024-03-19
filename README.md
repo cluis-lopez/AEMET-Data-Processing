@@ -32,3 +32,20 @@ Este comando nos generará una serie de ficheros nombrados "prefijo_ficheros_añ
 
     - La utilidad de procesado generará un par de ficheros (data.js y metadata.js) en el directorio actual que serán cargados por el navegador al cargar la página web asi pues la utilidad debe de ejecutarse en el mismo directorio en el que se encuentren los ficheros index.html y style.css. EN caso contrario habrñá que mover manualmente estos ficheros aldirectorio correspondiente
     - Abrir el fichero index.html con el navegador
+ 
+### Ejemplo Práctico
+Asumimos que estamos en una máquina con Windows. Des de una linea de comandos (CMD) ejecutamos:
+
+`gir clone  https://github.com/cluis-lopez/AEMET-Data-Processing.git`
+
+Si no tenemos git instalado en nuestor PC, nos cramos una carpeta y copiamos todos los ficheros de este repositorio a la misma
+Nos cambiamos a esa carpeta:
+
+`cd AEMET-Dat-Processing`
+
+A traves de la plataforma AEMET Opendata hemos obteinod una API Key que será un chorro de caraácteres del estilo de:
+
+`eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjbHfpcy5sb3BlekBnbWFpb55jb20iLCJqdGkiOiJkN2Q1MzcyMy03ZGE5LTQyODgtOTg4ZC03NmVhOTFhODdmNjAiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcwNDg4NjE0NCwidXNlcklkIjoiZDdkNTM3HjMtN2RhOS00Mjg4LTk4OGQtNzZlYTkxYTg3ZjYwIcwicm9sZSI6IiJ9.bOQXPPT9AHfjsVVwpEN1-3owbOfJYrPvtvfM2DzE8l4`
+
+Buscamos el identificador de la estación AEMET de la que queramos sacra el registro histórico ej: Valladolid:
+
