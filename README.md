@@ -61,4 +61,14 @@ Descargamos la serie de datos anuales utilizando (sustituyendo obviamente la cla
 
 `python download.py -f 2000 -l 2023 -p Valladolid -s 2422 -k eyJhbGciOiJIUzI1NiJ9.eyJzdsdIiOiJjbHVpcy5sb3BlekBnbWFpbC5jb20iLCJqdGkiOiJkMjI2M2U1My0xYTE0LTQ0ZTctYTEyZi03MGQxODIwOWQ4NTkiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcxMDg0NjIzNlfdsecklkIjoiZDIyNjNlNTMtMWExNC00NGU3LWEewr8632kMTgyMDlkODU5IiwiSI6IiJ9.i6ElSb3wIMgOxRHdDJffgdaVDyYVdLcFdIxCwzw5Ybo`
 
+Esto generará en la carpeta local una serie de ficheros del estilo `Valladolid_2015.json`, `Valladolid_2016.json`... etc 
+Crear una carpeta nueva y mover todos estos ficheros `*.json` a la misma. Ejemplo:
+```
+mkdir Valladolid
+mv *.json Valladolid/
+```
+Ejecutar el programa de procesado de datos sobre el contenido de la carpeta ejecutando:
 
+`python bulkproc.py Valladolid/` 
+
+Abrir directamente el fichero `index.html` con el navegador
