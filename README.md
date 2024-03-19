@@ -49,6 +49,6 @@ A traves de la plataforma AEMET Opendata hemos obteinod una API Key que nos habr
 
 Buscamos el identificador de la estación AEMET de la que queramos sacra el registro histórico ej: Valladolid. Para ello, buscamos dentro de la página de Municipios de [AEMET](https://www.aemet.es/es/eltiempo/prediccion/municipios) "Valladolid":
 
-!(AEMET_1.PNG)
+![Municipios AEMET](AEMET_1.PNG)
 
 
