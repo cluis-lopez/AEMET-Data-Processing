@@ -43,9 +43,11 @@ Nos cambiamos a esa carpeta:
 
 `cd AEMET-Dat-Processing`
 
-A traves de la plataforma AEMET Opendata hemos obteinod una API Key que será un chorro de caraácteres del estilo de:
+A traves de la plataforma AEMET Opendata hemos obteinod una API Key que nos habrá llegado por correo y será un chorro de caraácteres del estilo de:
 
-`eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjbHfpcy5sb3BlekBnbWFpb55jb20iLCJqdGkiOiJkN2Q1MzcyMy03ZGE5LTQyODgtOTg4ZC03NmVhOTFhODdmNjAiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcwNDg4NjE0NCwidXNlcklkIjoiZDdkNTM3HjMtN2RhOS00Mjg4LTk4OGQtNzZlYTkxYTg3ZjYwIcwicm9sZSI6IiJ9.bOQXPPT9AHfjsVVwpEN1-3owbOfJYrPvtvfM2DzE8l4`
+`eyJhbGciOiJIUzI1MiJ9.eyJzdWIiOiJjbHfpcy5sb3BlekBnbWFpb55jb20iLCJqdGkiOiJkN2Q1MzcyMy03ZGE5LTQyODgtOTg4ZC03NmVhOTFhODdmNjAiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcwNDg4NjE0NCwidXNlcklkIjoiZDdkNTM3HjMtN2RhOS00Mjg4LTk4OGQtNzZlYTkxYTg3ZjYwIcwicm9sZSI6IiJ9.bOQXPPT9AHfjsVVwpEN1-3owbOfJYsPvtvfM2DzE8l4`
 
-Buscamos el identificador de la estación AEMET de la que queramos sacra el registro histórico ej: Valladolid:
+Buscamos el identificador de la estación AEMET de la que queramos sacra el registro histórico ej: Valladolid. Para ello, buscamos dentro de la página de Municipios de [AEMET](https://www.aemet.es/es/eltiempo/prediccion/municipios) "Valladolid":
+!AEMET_1.PNG
+
 
