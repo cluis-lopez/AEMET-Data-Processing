@@ -36,7 +36,7 @@ Este comando nos generará una serie de ficheros nombrados "prefijo_ficheros_añ
 ### Ejemplo Práctico
 Asumimos que estamos en una máquina con Windows. Des de una linea de comandos (CMD) ejecutamos:
 
-`gir clone  https://github.com/cluis-lopez/AEMET-Data-Processing.git`
+`git clone  https://github.com/cluis-lopez/AEMET-Data-Processing.git`
 
 Si no tenemos git instalado en nuestor PC, nos cramos una carpeta y copiamos todos los ficheros de este repositorio a la misma
 Nos cambiamos a esa carpeta:
@@ -50,5 +50,15 @@ A traves de la plataforma AEMET Opendata hemos obteinod una API Key que nos habr
 Buscamos el identificador de la estación AEMET de la que queramos sacra el registro histórico ej: Valladolid. Para ello, buscamos dentro de la página de Municipios de [AEMET](https://www.aemet.es/es/eltiempo/prediccion/municipios) "Valladolid":
 
 ![Municipios AEMET](AEMET_1.PNG)
+
+Hacemos click en la estación más cercana y obtenemos los datos de la misma:
+
+![Estacion AEMET](AEMET_2.PNG)
+
+Reistramos el Id de la estación, en este caso: **2422**
+
+Descargamos la serie de datos anuales utilizando (sustituyendo obviamente la clave correspondiente):
+
+`python download.py -f 2000 -l 2023 -p Valladolid -s 2422 -k eyJhbGciOiJIUzI1NiJ9.eyJzdsdIiOiJjbHVpcy5sb3BlekBnbWFpbC5jb20iLCJqdGkiOiJkMjI2M2U1My0xYTE0LTQ0ZTctYTEyZi03MGQxODIwOWQ4NTkiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcxMDg0NjIzNlfdsecklkIjoiZDIyNjNlNTMtMWExNC00NGU3LWEewr8632kMTgyMDlkODU5IiwiSI6IiJ9.i6ElSb3wIMgOxRHdDJffgdaVDyYVdLcFdIxCwzw5Ybo`
 
 
