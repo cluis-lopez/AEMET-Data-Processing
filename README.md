@@ -34,20 +34,22 @@ Este comando nos generará una serie de ficheros nombrados "prefijo_ficheros_añ
     - Abrir el fichero index.html con el navegador
  
 ### Ejemplo Práctico
-Asumimos que estamos en una máquina con Windows. Des de una linea de comandos (CMD) ejecutamos:
+Asumiendo que estamos en una máquina con Windows. Desde una linea de comandos (CMD) ejecutamos:
 
 `git clone  https://github.com/cluis-lopez/AEMET-Data-Processing.git`
 
-Si no tenemos git instalado en nuestor PC, nos cramos una carpeta y copiamos todos los ficheros de este repositorio a la misma
-Nos cambiamos a esa carpeta:
+Si no tenemos git instalado en nuestro PC, nos creamos una carpeta y copiamos todos los ficheros de este repositorio a la misma y nos cambiamos a ella:
 
-`cd AEMET-Dat-Processing`
+```
+mkdir AEMET-Data_Processing
+cd AEMET-Data-Processing
+```
 
-A traves de la plataforma AEMET Opendata hemos obteinod una API Key que nos habrá llegado por correo y será un chorro de caraácteres del estilo de:
+A traves de la plataforma AEMET Opendata habremos solicitado y obtenido una API Key que nos habrá llegado por correo electrónico y será un chorro de carácteres del estilo de:
 
-`eyJhbGciOiJIUzI1MiJ9.eyJzdWIiOiJjbHfpcy5sb3BlekBnbWFpb55jb20iLCJqdGkiOiJkN2Q1MzcyMy03ZGE5LTQyODgtOTg4ZC03NmVhOTFhODdmNjAiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcwNDg4NjE0NCwidXNlcklkIjoiZDdkNTM3HjMtN2RhOS00Mjg4LTk4OGQtNzZlYTkxYTg3ZjYwIcwicm9sZSI6IiJ9.bOQXPPT9AHfjsVVwpEN1-3owbOfJYsPvtvfM2DzE8l4`
+`eyJhbGciOiJIUzI1MiJ9.eyJwdWIiOiJjbHfpcy5sb3BlekBnbWFpb55jb20iLCJqdGkiOiJkN2Q1MzcyMy03ZGE5LTQyODgtOTg4ZC03NmVhOTFhODdmNjAiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcwNDg4NjE0NCwidXNlcklkIjoiZDdkNTM3HjMtN2RhOS00Mjg4LTk4OGQtNzZlYTkxYTg3ZjYwIcwicm9sZSI6IiJ9.bOQXPPT9AHfjsVVwpEN1-3owbOfJYsPvtvfM2DzE8l4`
 
-Buscamos el identificador de la estación AEMET de la que queramos sacra el registro histórico ej: Valladolid. Para ello, buscamos dentro de la página de Municipios de [AEMET](https://www.aemet.es/es/eltiempo/prediccion/municipios) "Valladolid":
+Buscamos el identificador de la estación AEMET de la que queramos extraer el registro histórico ej: Valladolid. Para ello, buscamos dentro de la página de Municipios de [AEMET](https://www.aemet.es/es/eltiempo/prediccion/municipios) "Valladolid":
 
 ![Municipios AEMET](AEMET_1.PNG)
 
@@ -57,12 +59,12 @@ Hacemos click en la estación más cercana y obtenemos los datos de la misma:
 
 Registramos el Id de la estación, en este caso: **2422**
 
-Descargamos la serie de datos anuales utilizando el siguiente comando y sustituyendo obviamente la clave correspondiente), asi como los años inicial y final que queramos recuperar
+Descargamos la serie de datos anuales utilizando el siguiente comando y sustituyendo obviamente la clave correspondiente, asi como los años inicial y final que queramos recuperar
 
 `python download.py -f 2000 -l 2023 -p Valladolid -s 2422 -k eyJhbGciOiJIUzI1NiJ9.eyJzdsdIiOiJjbHVpcy5sb3BlekBnbWFpbC5jb20iLCJqdGkiOiJkMjI2M2U1My0xYTE0LTQ0ZTctYTEyZi03MGQxODIwOWQ4NTkiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcxMDg0NjIzNlfdsecklkIjoiZDIyNjNlNTMtMWExNC00NGU3LWEewr8632kMTgyMDlkODU5IiwiSI6IiJ9.i6ElSb3wIMgOxRHdDJffgdaVDyYVdLcFdIxCwzw5Ybo`
 
-Esto generará en la carpeta local una serie de ficheros del estilo `Valladolid_2000.json`, `Valladolid_2001.json`... etc 
-Crear una carpeta nueva y mover todos estos ficheros `*.json` a la misma. Ejemplo:
+Esto generará en la carpeta local 24 ficheros (uno por cada año) son nombres `Valladolid_2000.json`, `Valladolid_2001.json`... etc 
+Crear una carpeta nueva y mover todos los ficheros `*.json` descargados a la misma. Ejemplo:
 ```
 mkdir Valladolid
 mv *.json Valladolid/
