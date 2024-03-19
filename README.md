@@ -55,13 +55,13 @@ Hacemos click en la estación más cercana y obtenemos los datos de la misma:
 
 ![Estacion AEMET](AEMET_2.PNG)
 
-Reistramos el Id de la estación, en este caso: **2422**
+Registramos el Id de la estación, en este caso: **2422**
 
-Descargamos la serie de datos anuales utilizando (sustituyendo obviamente la clave correspondiente):
+Descargamos la serie de datos anuales utilizando el siguiente comando y sustituyendo obviamente la clave correspondiente), asi como los años inicial y final que queramos recuperar
 
 `python download.py -f 2000 -l 2023 -p Valladolid -s 2422 -k eyJhbGciOiJIUzI1NiJ9.eyJzdsdIiOiJjbHVpcy5sb3BlekBnbWFpbC5jb20iLCJqdGkiOiJkMjI2M2U1My0xYTE0LTQ0ZTctYTEyZi03MGQxODIwOWQ4NTkiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTcxMDg0NjIzNlfdsecklkIjoiZDIyNjNlNTMtMWExNC00NGU3LWEewr8632kMTgyMDlkODU5IiwiSI6IiJ9.i6ElSb3wIMgOxRHdDJffgdaVDyYVdLcFdIxCwzw5Ybo`
 
-Esto generará en la carpeta local una serie de ficheros del estilo `Valladolid_2015.json`, `Valladolid_2016.json`... etc 
+Esto generará en la carpeta local una serie de ficheros del estilo `Valladolid_2000.json`, `Valladolid_2001.json`... etc 
 Crear una carpeta nueva y mover todos estos ficheros `*.json` a la misma. Ejemplo:
 ```
 mkdir Valladolid
